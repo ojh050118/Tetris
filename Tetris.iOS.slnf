@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "Tetris.sln",
+    "projects": [
+      "Tetris.Game\\Tetris.Game.csproj",
+      "Tetris.Resources\\Tetris.Resources.csproj",
+      "Tetris.iOS\\Tetris.iOS.csproj"
+    ]
+  }
+}
