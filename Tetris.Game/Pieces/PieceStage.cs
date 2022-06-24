@@ -45,9 +45,7 @@ namespace Tetris.Game.Pieces
                     if (row[i])
                     {
                         var piece = PieceHelper.GeneratePiece(pieceType);
-                        //piece.Anchor = Anchor.BottomLeft;
-                        //piece.Origin = Anchor.BottomLeft;
-                        piece.Position = new Vector2(currentPosition, index * 30) + position;
+                        piece.Position = new Vector2(currentPosition, index * 30);
 
                         group.Add(piece);
                     }
@@ -58,7 +56,10 @@ namespace Tetris.Game.Pieces
                 currentPosition = 0;
             }
 
-            return new PieceGroup(group.ToArray());
+            return new PieceGroup(group.ToArray())
+            {
+                Position = position
+            };
         }
     }
 }

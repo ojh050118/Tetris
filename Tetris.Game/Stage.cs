@@ -4,7 +4,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
-using Tetris.Game.Pieces;
 
 namespace Tetris.Game
 {

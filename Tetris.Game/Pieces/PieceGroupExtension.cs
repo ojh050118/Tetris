@@ -16,8 +16,6 @@ namespace Tetris.Game.Pieces
 
         public static void Rotate(this PieceGroup group, RotationDirection direction)
         {
-            Vector2 centerPosition = getMinPosition(group.Pieces.First().Position);
-
             Vector2 getMinPosition(Vector2 value, int index = 0)
             {
                 if (index == group.Pieces.Length)
@@ -28,24 +26,41 @@ namespace Tetris.Game.Pieces
                 return min(value, getMinPosition(value2, ++index));
             }
 
+            Vector2 centerPosition = getMinPosition(group.Pieces.First().Position);
             double rotateRadian = Math.PI / 2 * (direction == RotationDirection.Clockwise ? 1 : -1);
+            Vector2 offset = Vector2.Zero;
+
+            group.Rotation += (int)MathHelper.RadiansToDegrees(rotateRadian);
+            group.RotateCount++;
 
             switch (group.PieceType)
             {
                 case PieceShape.O:
-                    centerPosition += new Vector2(15, 15);
+                    centerPosition += new Vector2(15);
                     break;
 
                 case PieceShape.I:
-                    Vector2 offset = Vector2.Zero;
-                    if (group.Rotation == 0 || group.Rotation == 360)
-                        offset += new Vector2(60, 0);
-                    else if (group.Rotation == 90 || group.Rotation == 270)
-                        offset += new Vector2(0, 60);
-                    else
-                        offset += new Vector2(-60, 0);
+                    centerPosition = group.Pieces[2].Position;
 
-                    centerPosition = group.Pieces.First().Position + offset;
+                    switch (Math.Abs(group.Rotation))
+                    {
+                        case 90:
+                            offset += new Vector2(0, Math.Sign(rotateRadian) * 30);
+                            break;
+
+                        case 180:
+                            offset += new Vector2(Math.Sign(rotateRadian) * -30, 0);
+                            break;
+
+                        case 270:
+                            offset += new Vector2(0, Math.Sign(rotateRadian) * -30);
+                            break;
+
+                        case 360:
+                            offset += new Vector2(Math.Sign(rotateRadian) * 30, 0);
+                            break;
+                    }
+
                     break;
 
                 case PieceShape.L:
@@ -70,11 +85,8 @@ namespace Tetris.Game.Pieces
                 var newX = (float)((piece.X - centerPosition.X) * Math.Cos(rotateRadian) - (piece.Y - centerPosition.Y) * Math.Sin(rotateRadian));
                 var newY = (float)((piece.X - centerPosition.X) * Math.Sin(rotateRadian) + (piece.Y - centerPosition.Y) * Math.Cos(rotateRadian));
 
-                piece.MoveTo(centerPosition + new Vector2(newX, newY), 0, Easing.OutQuint);
+                piece.Position = centerPosition + new Vector2(newX, newY) + offset;
             }
-
-            group.Rotation += (int)MathHelper.RadiansToDegrees(rotateRadian);
-            group.RotateCount++;
         }
 
         private static Vector2 min(Vector2 val1, Vector2 val2)

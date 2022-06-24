@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using osuTK;
 
 namespace Tetris.Game.Pieces
 {
@@ -28,6 +29,26 @@ namespace Tetris.Game.Pieces
         public PieceShape PieceType { get; }
 
         public bool[][] Shape { get; }
+
+        private Vector2 position;
+
+        public Vector2 Position
+        {
+            get => position;
+            set => position = value;
+        }
+
+        public float X
+        {
+            get => position.X;
+            set => position.X = value;
+        }
+
+        public float Y
+        {
+            get => position.Y;
+            set => position.Y = value;
+        }
 
         public PieceGroup(Piece[] pieces)
         {
