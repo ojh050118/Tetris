@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
+using Tetris.Game.Pieces.Group;
 
 namespace Tetris.Game.Pieces
 {

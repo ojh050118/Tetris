@@ -6,7 +6,7 @@ using osuTK;
 using osuTK.Graphics;
 using Tetris.Game.Pieces;
 
-namespace Tetris.Game
+namespace Tetris.Game.Play
 {
     public class Stage : Container
     {

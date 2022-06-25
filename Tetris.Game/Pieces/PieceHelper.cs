@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using Tetris.Game.Pieces.Shapes;
 
 namespace Tetris.Game.Pieces
 {

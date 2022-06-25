@@ -1,5 +1,5 @@
 ﻿using osu.Framework.Graphics;
-using Tetris.Game.Pieces;
+using Tetris.Game.Play;
 
 namespace Tetris.Game.Tests.Visual;
 

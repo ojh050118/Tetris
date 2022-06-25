@@ -1,6 +1,6 @@
 ﻿using osuTK.Graphics;
 
-namespace Tetris.Game.Pieces
+namespace Tetris.Game.Pieces.Shapes
 {
     public class PieceZ : Piece
     {
