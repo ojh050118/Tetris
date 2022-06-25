@@ -56,5 +56,13 @@ namespace Tetris.Game.Pieces
             PieceType = pieces.First().PieceType;
             Shape = pieces.First().Shape;
         }
+
+        public void SetDefaultPiecePosition(Vector2 newPosition)
+        {
+            foreach (var piece in Pieces)
+                piece.Position = piece.InitialPosition + newPosition;
+
+            Position = newPosition;
+        }
     }
 }

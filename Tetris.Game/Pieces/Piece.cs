@@ -34,6 +34,8 @@ namespace Tetris.Game.Pieces
             }
         }
 
+        public Vector2 InitialPosition { get; set; }
+
         public abstract PieceShape PieceType { get; }
 
         [BackgroundDependencyLoader]

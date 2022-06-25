@@ -3,6 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Input;
 
@@ -18,16 +19,40 @@ namespace Tetris.Game.Pieces
             Anchor = Anchor.BottomLeft;
             Origin = Anchor.BottomLeft;
             Size = new Vector2(Stage.STAGE_WIDTH, Stage.STAGE_HEIGHT);
-            group = createPieceGroup(PieceShape.I, Vector2.Zero);
-            AddRange(group.Pieces);
+            addPieceGroup((PieceShape)RNG.Next(0, 7));
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
         {
-            if (e.Key == Key.Up)
-                group.Rotate(RotationDirection.Clockwise);
+            switch (e.Key)
+            {
+                case Key.Up:
+                    group.Rotate(RotationDirection.Clockwise);
+                    break;
+
+                case Key.Left:
+                    group.MoveToOffset(new Vector2(-Piece.SIZE, 0));
+                    break;
+
+                case Key.Right:
+                    group.MoveToOffset(new Vector2(Piece.SIZE, 0));
+                    break;
+
+                case Key.Down:
+                    group.MoveToOffset(new Vector2(0, Piece.SIZE));
+                    break;
+
+                case Key.Space:
+                    addPieceGroup((PieceShape)RNG.Next(0, 7));
+                    break;
+            }
 
             return base.OnKeyDown(e);
+        }
+
+        private void addPieceGroup(PieceShape pieceType)
+        {
+            AddRange((group = createPieceGroup(pieceType, new Vector2(Stage.STAGE_WIDTH / 2 - Piece.SIZE * 2, -Piece.SIZE * 2))).Pieces);
         }
 
         private PieceGroup createPieceGroup(PieceShape pieceType, Vector2 position)
@@ -45,21 +70,20 @@ namespace Tetris.Game.Pieces
                     if (row[i])
                     {
                         var piece = PieceHelper.GeneratePiece(pieceType);
-                        piece.Position = new Vector2(currentPosition, index * 30);
-
+                        piece.InitialPosition = new Vector2(currentPosition, index * Piece.SIZE);
                         group.Add(piece);
                     }
 
-                    currentPosition += 30;
+                    currentPosition += Piece.SIZE;
                 }
 
                 currentPosition = 0;
             }
 
-            return new PieceGroup(group.ToArray())
-            {
-                Position = position
-            };
+            var pieceGroup = new PieceGroup(group.ToArray());
+            pieceGroup.SetDefaultPiecePosition(position);
+
+            return pieceGroup;
         }
     }
 }

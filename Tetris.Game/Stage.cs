@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
+using Tetris.Game.Pieces;
 
 namespace Tetris.Game
 {
@@ -33,8 +34,9 @@ namespace Tetris.Game
                         new RectangularGridLine(new Vector2(STAGE_WIDTH, STAGE_HEIGHT))
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Spacing = new Vector2(30)
-                        }
+                            Spacing = new Vector2(Piece.SIZE)
+                        },
+                        new PieceStage()
                     }
                 },
             };

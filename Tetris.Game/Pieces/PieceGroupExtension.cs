@@ -8,10 +8,12 @@ namespace Tetris.Game.Pieces
 {
     public static class PieceGroupExtension
     {
-        public static void MoveTo(this PieceGroup group, Vector2 newPosition, double duration = 0, Easing easing = Easing.None)
+        public static void MoveToOffset(this PieceGroup group, Vector2 newPosition, double duration = 0, Easing easing = Easing.None)
         {
+            group.Position = newPosition;
+
             foreach (var piece in group.Pieces)
-                piece.MoveTo(newPosition, duration, easing);
+                piece.MoveTo(piece.Position + newPosition, duration, easing);
         }
 
         public static void Rotate(this PieceGroup group, RotationDirection direction)
@@ -36,7 +38,7 @@ namespace Tetris.Game.Pieces
             switch (group.PieceType)
             {
                 case PieceShape.O:
-                    centerPosition += new Vector2(15);
+                    centerPosition += new Vector2(Piece.SIZE / 2);
                     break;
 
                 case PieceShape.I:
@@ -45,19 +47,19 @@ namespace Tetris.Game.Pieces
                     switch (Math.Abs(group.Rotation))
                     {
                         case 90:
-                            offset += new Vector2(0, Math.Sign(rotateRadian) * 30);
+                            offset += new Vector2(0, Math.Sign(rotateRadian) * Piece.SIZE);
                             break;
 
                         case 180:
-                            offset += new Vector2(Math.Sign(rotateRadian) * -30, 0);
+                            offset += new Vector2(Math.Sign(rotateRadian) * -Piece.SIZE, 0);
                             break;
 
                         case 270:
-                            offset += new Vector2(0, Math.Sign(rotateRadian) * -30);
+                            offset += new Vector2(0, Math.Sign(rotateRadian) * -Piece.SIZE);
                             break;
 
                         case 360:
-                            offset += new Vector2(Math.Sign(rotateRadian) * 30, 0);
+                            offset += new Vector2(Math.Sign(rotateRadian) * Piece.SIZE, 0);
                             break;
                     }
 

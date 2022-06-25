@@ -1,18 +1,17 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Tetris.Game.Pieces
 {
     public static class PieceHelper
     {
-
         public static PieceShape ToPieceShape(bool[][] shape)
         {
             int firstStartIndex = Array.IndexOf(shape.First(), true);
             int firstEndIndex = Array.LastIndexOf(shape.First(), true);
 
             int lastStartIndex = Array.IndexOf(shape.Last(), true);
-            //int lastEndIndex = Array.LastIndexOf(shape.Last(), true);
 
             for (int i = 0; i < shape.Length; i++)
             {
@@ -90,6 +89,7 @@ namespace Tetris.Game.Pieces
                     return new PieceZ();
 
                 default:
+                    Debug.Assert(false, "알 수 없는 조각.");
                     return null;
             }
         }
