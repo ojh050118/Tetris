@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
@@ -42,6 +41,8 @@ namespace Tetris.Game.Pieces
 
         public virtual PieceGroup Group { get; set; }
 
+        public Quad Quad { get; set; }
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -55,10 +56,9 @@ namespace Tetris.Game.Pieces
 
         public bool Equals(Piece piece)
         {
-
             return PieceColour == piece.PieceColour &&
-                   Precision.AlmostEquals(InitialPosition, piece.InitialPosition) &&
-                   Shape.SequenceEqual(piece.Shape) &&
+                   Group.Equals(piece.Group) &&
+                   Quad.AlmostEquals(piece.Quad) &&
                    PieceType == piece.PieceType;
         }
     }

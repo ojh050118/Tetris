@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osuTK;
 
 namespace Tetris.Game.Pieces
@@ -13,7 +14,11 @@ namespace Tetris.Game.Pieces
             group.Position += newPosition;
 
             foreach (var piece in group.Pieces)
-                piece.MoveTo(piece.Position + newPosition, duration, easing);
+            {
+                var offset = piece.Position + newPosition;
+                piece.MoveTo(offset, duration, easing);
+                piece.Quad = new Quad(offset.X, offset.Y, piece.Size.X - 1, piece.Size.Y - 1);
+            }
         }
 
         public static void Rotate(this PieceGroup group, RotationDirection direction)
@@ -38,28 +43,33 @@ namespace Tetris.Game.Pieces
             switch (group.PieceType)
             {
                 case PieceShape.O:
-                    centerPosition += new Vector2(Piece.SIZE / 2);
+                    var signX = Math.Sign(centerPosition.X) >= 0 ? 1 : -1;
+                    var signY = Math.Sign(centerPosition.Y) >= 0 ? 1 : -1;
+                    var sign = Math.Sign(centerPosition.X) * Math.Sign(centerPosition.X) >= 0 ? 1 : -1;
+
+                    centerPosition += sign * new Vector2(Piece.SIZE / 2 * signX, Piece.SIZE / 2 * signY);
                     break;
 
                 case PieceShape.I:
-                    centerPosition = group.Pieces[2].Position;
+                    centerPosition = direction == RotationDirection.Clockwise ? group.Pieces[2].Position : group.Pieces[1].Position;
 
                     switch (Math.Abs(group.Rotation))
                     {
                         case 90:
-                            offset += new Vector2(0, Math.Sign(rotateRadian) * Piece.SIZE);
+                            offset += Math.Sign(rotateRadian) * new Vector2(0, Piece.SIZE);
                             break;
 
                         case 180:
-                            offset += new Vector2(Math.Sign(rotateRadian) * -Piece.SIZE, 0);
+                            offset += Math.Sign(rotateRadian) * new Vector2(-Piece.SIZE, 0);
                             break;
 
                         case 270:
-                            offset += new Vector2(0, Math.Sign(rotateRadian) * -Piece.SIZE);
+                            offset += Math.Sign(rotateRadian) * new Vector2(0, -Piece.SIZE);
                             break;
 
+                        case 0:
                         case 360:
-                            offset += new Vector2(Math.Sign(rotateRadian) * Piece.SIZE, 0);
+                            offset += Math.Sign(rotateRadian) * new Vector2(Piece.SIZE, 0);
                             break;
                     }
 
@@ -88,6 +98,7 @@ namespace Tetris.Game.Pieces
                 var newY = (float)((piece.X - centerPosition.X) * Math.Sin(rotateRadian) + (piece.Y - centerPosition.Y) * Math.Cos(rotateRadian));
 
                 piece.Position = centerPosition + new Vector2(newX, newY) + offset;
+                piece.Quad = new Quad(piece.Position.X, piece.Position.Y, piece.Size.X - 1, piece.Size.Y - 1);
             }
         }
 

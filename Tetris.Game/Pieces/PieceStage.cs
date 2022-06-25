@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
+using osu.Framework.Extensions.PolygonExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Events;
 using osu.Framework.Utils;
 using osuTK;
+using osuTK.Graphics;
 using osuTK.Input;
 
 namespace Tetris.Game.Pieces
 {
-    public class PieceStage : Container
+    public class PieceStage : Container<Piece>
     {
         private PieceGroup group;
 
@@ -26,7 +30,17 @@ namespace Tetris.Game.Pieces
         {
             switch (e.Key)
             {
+                case Key.X:
                 case Key.Up:
+                    group.Rotate(RotationDirection.Clockwise);
+                    break;
+
+                case Key.Z:
+                    group.Rotate(RotationDirection.Counterclockwise);
+                    break;
+
+                case Key.A:
+                    group.Rotate(RotationDirection.Clockwise);
                     group.Rotate(RotationDirection.Clockwise);
                     break;
 
@@ -47,12 +61,40 @@ namespace Tetris.Game.Pieces
                     break;
             }
 
+            checkForCollision();
+
+
             return base.OnKeyDown(e);
         }
 
         private void addPieceGroup(PieceShape pieceType)
         {
             AddRange((group = createPieceGroup(pieceType, new Vector2(Stage.STAGE_WIDTH / 2 - Piece.SIZE * 2, -Piece.SIZE * 2))).Pieces);
+        }
+
+        private bool checkForCollision()
+        {
+            bool collied = false;
+
+            foreach (var piece in group.Pieces)
+            {
+                foreach (var spacePiece in Children)
+                {
+                    if (spacePiece.Group.Equals(piece.Group))
+                        continue;
+
+                    if (spacePiece.Quad.Intersects(piece.Quad))
+                    {
+                        spacePiece.FlashColour(Color4.White.Opacity(0), 500, Easing.OutQuint);
+                        piece.FlashColour(Color4.White.Opacity(0), 500, Easing.OutQuint);
+
+                        collied = true;
+                    }
+
+                }
+            }
+
+            return collied;
         }
 
         private PieceGroup createPieceGroup(PieceShape pieceType, Vector2 position)
@@ -71,6 +113,7 @@ namespace Tetris.Game.Pieces
                     {
                         var piece = PieceHelper.GeneratePiece(pieceType);
                         piece.InitialPosition = new Vector2(currentPosition, index * Piece.SIZE);
+                        piece.Quad = new Quad(currentPosition, index * Piece.SIZE, Piece.SIZE, Piece.SIZE);
                         group.Add(piece);
                     }
 

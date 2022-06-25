@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Utils;
 using osuTK;
 
@@ -71,7 +72,11 @@ namespace Tetris.Game.Pieces
         public void SetDefaultPiecePosition(Vector2 newPosition)
         {
             foreach (var piece in Pieces)
+            {
                 piece.Position = piece.InitialPosition + newPosition;
+                // 완전히 겹치는지 검사하기 위해 1픽셀을 줄입니다.
+                piece.Quad = new Quad(piece.Position.X, piece.Position.Y, piece.Width - 1, piece.Height - 1);
+            }
 
             Position = newPosition;
         }
@@ -133,7 +138,6 @@ namespace Tetris.Game.Pieces
             return RotateCount == group.RotateCount &&
                    Rotation == group.Rotation &&
                    PieceType == group.PieceType &&
-                   Shape.SequenceEqual(group.Shape) &&
                    Precision.AlmostEquals(Position, group.Position) &&
                    Precision.AlmostEquals(Size, group.Size);
         }
@@ -141,7 +145,7 @@ namespace Tetris.Game.Pieces
 
         public override string ToString()
         {
-            return $"PieceType: {PieceType} | Position: {Position} | Size: {Size}";
+            return $"PieceType: {PieceType} | Position: {Position} | Size: {Size} | Rotation: {Rotation}";
         }
     }
 }
