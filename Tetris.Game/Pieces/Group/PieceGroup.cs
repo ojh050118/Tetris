@@ -4,7 +4,7 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Utils;
 using osuTK;
 
-namespace Tetris.Game.Pieces
+namespace Tetris.Game.Pieces.Group
 {
     public class PieceGroup : IEquatable<PieceGroup>
     {
@@ -59,8 +59,11 @@ namespace Tetris.Game.Pieces
 
         public float Height => getMaxY() - getMinY() + Piece.SIZE;
 
-        public PieceGroup(Piece[] pieces)
+        public int ID { get; }
+
+        public PieceGroup(int id, Piece[] pieces)
         {
+            ID = id;
             Pieces = pieces;
             PieceType = pieces.First().PieceType;
             Shape = pieces.First().Shape;
@@ -136,6 +139,7 @@ namespace Tetris.Game.Pieces
         public bool Equals(PieceGroup group)
         {
             return group != null &&
+                   ID == group.ID &&
                    RotateCount == group.RotateCount &&
                    Rotation == group.Rotation &&
                    PieceType == group.PieceType &&
@@ -145,7 +149,7 @@ namespace Tetris.Game.Pieces
 
         public override string ToString()
         {
-            return $"PieceType: {PieceType} | Position: {Position} | Size: {Size} | Rotation: {Rotation}";
+            return $"ID: {ID} | PieceType: {PieceType} | Position: {Position} | Size: {Size}";
         }
     }
 }

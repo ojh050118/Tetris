@@ -6,10 +6,12 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osuTK;
 
-namespace Tetris.Game.Pieces
+namespace Tetris.Game.Pieces.Group
 {
     public static class PieceGroupExtension
     {
+        private static int groupID = 0;
+
         public static void MoveToOffset(this PieceGroup group, Vector2 newPosition, double duration = 0, Easing easing = Easing.None)
         {
             group.Position += newPosition;
@@ -89,7 +91,6 @@ namespace Tetris.Game.Pieces
 
                 default:
                     Debug.Assert(false, "알 수 없는 조각.");
-                    centerPosition += Vector2.Zero;
                     break;
             }
 
@@ -129,7 +130,7 @@ namespace Tetris.Game.Pieces
                 currentPosition = 0;
             }
 
-            var pieceGroup = new PieceGroup(group.ToArray());
+            var pieceGroup = new PieceGroup(groupID++, group.ToArray());
             pieceGroup.SetDefaultPiecePosition(position);
 
             return pieceGroup;
