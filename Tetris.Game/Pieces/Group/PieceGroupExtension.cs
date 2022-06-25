@@ -43,7 +43,7 @@ namespace Tetris.Game.Pieces
 
             switch (group.PieceType)
             {
-                case PieceShape.O:
+                case PieceType.O:
                     var signX = Math.Sign(centerPosition.X) >= 0 ? 1 : -1;
                     var signY = Math.Sign(centerPosition.Y) >= 0 ? 1 : -1;
                     var sign = Math.Sign(centerPosition.X) * Math.Sign(centerPosition.X) >= 0 ? 1 : -1;
@@ -51,7 +51,7 @@ namespace Tetris.Game.Pieces
                     centerPosition += sign * new Vector2(Piece.SIZE / 2 * signX, Piece.SIZE / 2 * signY);
                     break;
 
-                case PieceShape.I:
+                case PieceType.I:
                     centerPosition = direction == RotationDirection.Clockwise ? group.Pieces[2].Position : group.Pieces[1].Position;
 
                     switch (Math.Abs(group.Rotation))
@@ -76,14 +76,14 @@ namespace Tetris.Game.Pieces
 
                     break;
 
-                case PieceShape.L:
-                case PieceShape.J:
-                case PieceShape.T:
-                case PieceShape.Z:
+                case PieceType.L:
+                case PieceType.J:
+                case PieceType.T:
+                case PieceType.Z:
                     centerPosition = group.Pieces[2].Position;
                     break;
 
-                case PieceShape.S:
+                case PieceType.S:
                     centerPosition = group.Pieces[3].Position;
                     break;
 
@@ -103,7 +103,7 @@ namespace Tetris.Game.Pieces
             }
         }
 
-        public static PieceGroup CreatePieceGroup(PieceShape pieceType, Vector2 position)
+        public static PieceGroup CreatePieceGroup(PieceType pieceType, Vector2 position)
         {
             bool[][] shape = PieceHelper.GeneratePiece(pieceType).Shape;
             int currentPosition = 0;

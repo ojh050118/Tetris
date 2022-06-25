@@ -37,7 +37,7 @@ namespace Tetris.Game.Pieces
 
         public Vector2 InitialPosition { get; set; }
 
-        public abstract PieceShape PieceType { get; }
+        public abstract PieceType PieceType { get; }
 
         public virtual PieceGroup Group { get; set; }
 

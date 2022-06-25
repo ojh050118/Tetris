@@ -6,7 +6,7 @@ namespace Tetris.Game.Pieces
     {
         bool[][] Shape { get; }
 
-        PieceShape PieceType { get; }
+        PieceType PieceType { get; }
 
         Color4 PieceColour { get; }
     }

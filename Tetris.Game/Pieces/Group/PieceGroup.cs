@@ -29,7 +29,7 @@ namespace Tetris.Game.Pieces
             }
         }
 
-        public PieceShape PieceType { get; }
+        public PieceType PieceType { get; }
 
         public bool[][] Shape { get; }
 

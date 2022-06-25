@@ -10,7 +10,7 @@ namespace Tetris.Game.Pieces
             new[] { true, true, false, false }
         };
 
-        public override PieceShape PieceType => PieceShape.S;
+        public override PieceType PieceType => PieceType.S;
 
         public override Color4 PieceColour => new Color4(144, 192, 65, 255);
     }

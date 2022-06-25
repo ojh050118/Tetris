@@ -6,7 +6,7 @@ namespace Tetris.Game.Pieces
 {
     public static class PieceHelper
     {
-        public static PieceShape ToPieceShape(bool[][] shape)
+        public static PieceType ToPieceShape(bool[][] shape)
         {
             int firstStartIndex = Array.IndexOf(shape.First(), true);
             int firstEndIndex = Array.LastIndexOf(shape.First(), true);
@@ -31,61 +31,61 @@ namespace Tetris.Game.Pieces
                     {
                         case -1:
                             if (lastStartIndex != -1)
-                                return PieceShape.I;
+                                return PieceType.I;
 
-                            return PieceShape.Other;
+                            return PieceType.Other;
 
                         case 0:
-                            return PieceShape.J;
+                            return PieceType.J;
 
                         case 1:
-                            return PieceShape.T;
+                            return PieceType.T;
 
                         case 2:
-                            return PieceShape.L;
+                            return PieceType.L;
                     }
                 }
                 else
                 {
                     // 블럭이 4개인 경우입니다.
                     if (firstEndIndex - firstStartIndex > 2)
-                        return PieceShape.I;
+                        return PieceType.I;
 
                     if (firstStartIndex < lastStartIndex)
-                        return PieceShape.Z;
+                        return PieceType.Z;
                     else if (firstStartIndex > lastStartIndex)
-                        return PieceShape.S;
+                        return PieceType.S;
                     else
-                        return PieceShape.O;
+                        return PieceType.O;
                 }
             }
 
-            return PieceShape.Other;
+            return PieceType.Other;
         }
 
-        public static Piece GeneratePiece(PieceShape pieceType)
+        public static Piece GeneratePiece(PieceType pieceType)
         {
             switch (pieceType)
             {
-                case PieceShape.I:
+                case PieceType.I:
                     return new PieceI();
 
-                case PieceShape.J:
+                case PieceType.J:
                     return new PieceJ();
 
-                case PieceShape.L:
+                case PieceType.L:
                     return new PieceL();
 
-                case PieceShape.O:
+                case PieceType.O:
                     return new PieceO();
 
-                case PieceShape.S:
+                case PieceType.S:
                     return new PieceS();
 
-                case PieceShape.T:
+                case PieceType.T:
                     return new PieceT();
 
-                case PieceShape.Z:
+                case PieceType.Z:
                     return new PieceZ();
 
                 default:
