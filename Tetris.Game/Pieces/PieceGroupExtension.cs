@@ -10,7 +10,7 @@ namespace Tetris.Game.Pieces
     {
         public static void MoveToOffset(this PieceGroup group, Vector2 newPosition, double duration = 0, Easing easing = Easing.None)
         {
-            group.Position = newPosition;
+            group.Position += newPosition;
 
             foreach (var piece in group.Pieces)
                 piece.MoveTo(piece.Position + newPosition, duration, easing);

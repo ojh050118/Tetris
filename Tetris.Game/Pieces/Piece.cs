@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
 namespace Tetris.Game.Pieces
 {
-    public abstract class Piece : Container, IHasPieceProperty
+    public abstract class Piece : Container, IHasPieceProperty, IEquatable<Piece>
     {
         public const int SIZE = 30;
 
@@ -38,6 +40,8 @@ namespace Tetris.Game.Pieces
 
         public abstract PieceShape PieceType { get; }
 
+        public virtual PieceGroup Group { get; set; }
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -47,6 +51,15 @@ namespace Tetris.Game.Pieces
                 RelativeSizeAxes = Axes.Both,
                 Colour = PieceColour
             };
+        }
+
+        public bool Equals(Piece piece)
+        {
+
+            return PieceColour == piece.PieceColour &&
+                   Precision.AlmostEquals(InitialPosition, piece.InitialPosition) &&
+                   Shape.SequenceEqual(piece.Shape) &&
+                   PieceType == piece.PieceType;
         }
     }
 }
