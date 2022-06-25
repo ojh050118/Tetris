@@ -2,18 +2,27 @@
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Extensions.PolygonExtensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
-using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
+using Tetris.Game.Pieces;
+using Tetris.Game.Pieces.Group;
 
-namespace Tetris.Game.Pieces
+namespace Tetris.Game.Play
 {
     public class PieceStage : Container<Piece>
     {
         private PieceGroup group;
+
+        private readonly RandomPieceGenerator rpg;
+
+        public PieceStage()
+        {
+            rpg = new RandomPieceGenerator();
+        }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -21,7 +30,7 @@ namespace Tetris.Game.Pieces
             Anchor = Anchor.BottomLeft;
             Origin = Anchor.BottomLeft;
             Size = new Vector2(Stage.STAGE_WIDTH, Stage.STAGE_HEIGHT);
-            addPieceGroup((PieceType)RNG.Next(0, 7));
+            addPieceGroup(rpg.NextPiece());
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -55,7 +64,7 @@ namespace Tetris.Game.Pieces
                     break;
 
                 case Key.Space:
-                    addPieceGroup((PieceType)RNG.Next(0, 7));
+                    addPieceGroup(rpg.NextPiece());
                     break;
             }
 
@@ -84,8 +93,8 @@ namespace Tetris.Game.Pieces
 
                     if (spacePiece.Quad.Intersects(piece.Quad))
                     {
-                        spacePiece.FlashColour(Color4.White.Opacity(0), 500, Easing.OutQuint);
-                        piece.FlashColour(Color4.White.Opacity(0), 500, Easing.OutQuint);
+                        spacePiece.FlashColour(Color4.Red, 1000, Easing.OutQuint);
+                        piece.FlashColour(ColourInfo.GradientVertical(Color4.Transparent, Color4.White.Opacity(0.5f)), 1000, Easing.OutQuint);
 
                         collied = true;
                     }
