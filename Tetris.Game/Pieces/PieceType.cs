@@ -1,6 +1,6 @@
 ﻿namespace Tetris.Game.Pieces
 {
-    public enum PieceShape
+    public enum PieceType
     {
         O,
         I,
