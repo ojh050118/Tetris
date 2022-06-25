@@ -21,7 +21,7 @@ namespace Tetris.Game.Pieces
             Anchor = Anchor.BottomLeft;
             Origin = Anchor.BottomLeft;
             Size = new Vector2(Stage.STAGE_WIDTH, Stage.STAGE_HEIGHT);
-            addPieceGroup((PieceShape)RNG.Next(0, 7));
+            addPieceGroup((PieceType)RNG.Next(0, 7));
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -55,7 +55,7 @@ namespace Tetris.Game.Pieces
                     break;
 
                 case Key.Space:
-                    addPieceGroup((PieceShape)RNG.Next(0, 7));
+                    addPieceGroup((PieceType)RNG.Next(0, 7));
                     break;
             }
 
@@ -64,12 +64,12 @@ namespace Tetris.Game.Pieces
             return base.OnKeyDown(e);
         }
 
-        private void addPieceGroup(PieceShape pieceType)
+        private void addPieceGroup(PieceType pieceType)
         {
             AddRange((group = createPieceGroup(pieceType)).Pieces);
         }
 
-        private PieceGroup createPieceGroup(PieceShape pieceType) => PieceGroupExtension.CreatePieceGroup(pieceType, new Vector2(Stage.STAGE_WIDTH / 2 - Piece.SIZE * 2, -Piece.SIZE * 2));
+        private PieceGroup createPieceGroup(PieceType pieceType) => PieceGroupExtension.CreatePieceGroup(pieceType, new Vector2(Stage.STAGE_WIDTH / 2 - Piece.SIZE * 2, -Piece.SIZE * 2));
 
         private bool checkForCollision()
         {
