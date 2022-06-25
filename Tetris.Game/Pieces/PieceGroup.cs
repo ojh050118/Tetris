@@ -135,13 +135,13 @@ namespace Tetris.Game.Pieces
 
         public bool Equals(PieceGroup group)
         {
-            return RotateCount == group.RotateCount &&
+            return group != null &&
+                   RotateCount == group.RotateCount &&
                    Rotation == group.Rotation &&
                    PieceType == group.PieceType &&
                    Precision.AlmostEquals(Position, group.Position) &&
                    Precision.AlmostEquals(Size, group.Size);
         }
-
 
         public override string ToString()
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Graphics;
@@ -100,6 +101,38 @@ namespace Tetris.Game.Pieces
                 piece.Position = centerPosition + new Vector2(newX, newY) + offset;
                 piece.Quad = new Quad(piece.Position.X, piece.Position.Y, piece.Size.X - 1, piece.Size.Y - 1);
             }
+        }
+
+        public static PieceGroup CreatePieceGroup(PieceShape pieceType, Vector2 position)
+        {
+            bool[][] shape = PieceHelper.GeneratePiece(pieceType).Shape;
+            int currentPosition = 0;
+            List<Piece> group = new List<Piece>();
+
+            for (var index = 0; index < shape.Length; index++)
+            {
+                var row = shape[index];
+
+                for (var i = 0; i < row.Length; i++)
+                {
+                    if (row[i])
+                    {
+                        var piece = PieceHelper.GeneratePiece(pieceType);
+                        piece.InitialPosition = new Vector2(currentPosition, index * Piece.SIZE);
+                        piece.Quad = new Quad(currentPosition, index * Piece.SIZE, Piece.SIZE, Piece.SIZE);
+                        group.Add(piece);
+                    }
+
+                    currentPosition += Piece.SIZE;
+                }
+
+                currentPosition = 0;
+            }
+
+            var pieceGroup = new PieceGroup(group.ToArray());
+            pieceGroup.SetDefaultPiecePosition(position);
+
+            return pieceGroup;
         }
 
         private static Vector2 min(Vector2 val1, Vector2 val2)
