@@ -99,6 +99,13 @@ namespace Tetris.Game.Play
                         collied = true;
                     }
                 }
+
+                if (piece.X < 0 || piece.X > 270 || piece.Y > 570)
+                {
+                    piece.FlashColour(Color4.Red, 1000, Easing.OutQuint);
+
+                    collied = true;
+                }
             }
 
             return collied;
