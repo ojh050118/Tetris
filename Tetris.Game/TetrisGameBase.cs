@@ -2,6 +2,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.IO.Stores;
+using Tetris.Game.Input;
 using Tetris.Resources;
 
 namespace Tetris.Game
@@ -19,6 +20,7 @@ namespace Tetris.Game
         private void load()
         {
             Resources.AddStore(new DllResourceStore(typeof(TetrisResources).Assembly));
+            base.Content.Add(new TetrisKeyBindingContainer(this));
         }
     }
 }
