@@ -94,7 +94,7 @@ namespace Tetris.Game.Play
         {
             bool collied = false;
 
-            void revert(Piece piece)
+            void revert()
             {
                 // 회전 여부는 좌표 값 차이로 확인합니다.
                 if (Precision.AlmostEquals(Vector2.Zero, moveOffset))
@@ -109,7 +109,7 @@ namespace Tetris.Game.Play
                     return;
                 }
 
-                piece.FlashColour(Color4.Red, 1000, Easing.OutQuint);
+                group.Pieces.ForEach(p => p.FlashColour(Color4.Red, 1000, Easing.OutQuint));
                 group.MoveToOffset(-moveOffset);
             }
 
@@ -117,24 +117,19 @@ namespace Tetris.Game.Play
             {
                 foreach (var spacePiece in Children)
                 {
-                    if (spacePiece.Group.Equals(piece.Group))
+                    if (spacePiece.Group.Equals(group))
                         continue;
 
                     if (spacePiece.Quad.Intersects(piece.Quad))
-                    {
-                        revert(piece);
-
                         collied = true;
-                    }
                 }
 
-                if (piece.X < 0 || piece.X > 270 || piece.Y > 570)
-                {
-                    revert(piece);
-
+                if ((int)piece.X < 0 || (int)piece.X > 270 || (int)piece.Y > 570)
                     collied = true;
-                }
             }
+
+            if (collied)
+                revert();
 
             return collied;
         }
