@@ -64,10 +64,11 @@ namespace Tetris.Game.Play
                     break;
 
                 case InputAction.SoftDrop:
-                    group.MoveToOffset(moveOffset = new Vector2(0, Piece.SIZE));
+                    drop(false);
                     break;
 
                 case InputAction.HardDrop:
+                    drop(true);
                     addPieceGroup(rpg.NextPiece());
                     break;
 
@@ -81,6 +82,19 @@ namespace Tetris.Game.Play
 
         public void OnReleased(KeyBindingReleaseEvent<InputAction> e)
         {
+        }
+
+        private void drop(bool hardDrop)
+        {
+            if (hardDrop)
+            {
+                while (!checkForCollision(new Vector2(0, Piece.SIZE)))
+                    group.MoveToOffset(new Vector2(0, Piece.SIZE));
+            }
+            else
+            {
+                group.MoveToOffset(new Vector2(0, Piece.SIZE));
+            }
         }
 
         private void addPieceGroup(PieceType pieceType)
