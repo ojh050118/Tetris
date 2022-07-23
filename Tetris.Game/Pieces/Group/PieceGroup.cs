@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Utils;
@@ -8,7 +9,7 @@ namespace Tetris.Game.Pieces.Group
 {
     public class PieceGroup : IEquatable<PieceGroup>
     {
-        public Piece[] Pieces { get; }
+        public List<Piece> Pieces { get; }
 
         public int RotateCount { get; set; }
 
@@ -61,7 +62,7 @@ namespace Tetris.Game.Pieces.Group
 
         public int ID { get; }
 
-        public PieceGroup(int id, Piece[] pieces)
+        public PieceGroup(int id, List<Piece> pieces)
         {
             ID = id;
             Pieces = pieces;
@@ -88,7 +89,7 @@ namespace Tetris.Game.Pieces.Group
         {
             float x = float.MaxValue;
 
-            for (int i = 0; i < Pieces.Length; i++)
+            for (int i = 0; i < Pieces.Count; i++)
             {
                 if (Pieces[i].X < x)
                     x = Pieces[i].X;
@@ -101,7 +102,7 @@ namespace Tetris.Game.Pieces.Group
         {
             float x = float.MinValue;
 
-            for (int i = 0; i < Pieces.Length; i++)
+            for (int i = 0; i < Pieces.Count; i++)
             {
                 if (Pieces[i].X > x)
                     x = Pieces[i].X;
@@ -114,7 +115,7 @@ namespace Tetris.Game.Pieces.Group
         {
             float y = float.MaxValue;
 
-            for (int i = 0; i < Pieces.Length; i++)
+            for (int i = 0; i < Pieces.Count; i++)
             {
                 if (Pieces[i].Y < y)
                     y = Pieces[i].Y;
@@ -127,7 +128,7 @@ namespace Tetris.Game.Pieces.Group
         {
             float y = float.MinValue;
 
-            for (int i = 0; i < Pieces.Length; i++)
+            for (int i = 0; i < Pieces.Count; i++)
             {
                 if (Pieces[i].Y > y)
                     y = Pieces[i].Y;

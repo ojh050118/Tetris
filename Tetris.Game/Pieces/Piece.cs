@@ -62,5 +62,12 @@ namespace Tetris.Game.Pieces
                    Quad.AlmostEquals(piece.Quad) &&
                    PieceType == piece.PieceType;
         }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+
+            Group.Pieces.Remove(this);
+        }
     }
 }

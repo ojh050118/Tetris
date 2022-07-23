@@ -28,7 +28,7 @@ namespace Tetris.Game.Pieces.Group
         {
             Vector2 getMinPosition(Vector2 value, int index = 0)
             {
-                if (index == group.Pieces.Length)
+                if (index == group.Pieces.Count)
                     return min(value, group.Pieces[index - 2].Position);
 
                 var value2 = group.Pieces[index].Position;
@@ -130,7 +130,7 @@ namespace Tetris.Game.Pieces.Group
                 currentPosition = 0;
             }
 
-            var pieceGroup = new PieceGroup(groupID++, group.ToArray());
+            var pieceGroup = new PieceGroup(groupID++, group);
             pieceGroup.SetDefaultPiecePosition(position);
 
             return pieceGroup;

@@ -1,8 +1,11 @@
-﻿using osu.Framework.Allocation;
+﻿using System;
+using System.Linq;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Extensions.PolygonExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Utils;
@@ -77,6 +80,7 @@ namespace Tetris.Game.Play
             }
 
             checkForCollision(moveOffset, direction);
+
             return true;
         }
 
@@ -90,11 +94,56 @@ namespace Tetris.Game.Play
             {
                 while (!checkForCollision(new Vector2(0, Piece.SIZE)))
                     group.MoveToOffset(new Vector2(0, Piece.SIZE));
+
+                commit();
             }
             else
             {
                 group.MoveToOffset(new Vector2(0, Piece.SIZE));
+
+                if (checkForCollision(new Vector2(0, Piece.SIZE)))
+                    commit();
             }
+        }
+
+        private void commit()
+        {
+            (int count, int startPosY) = clearLine();
+
+            Children.ForEach(p =>
+            {
+                if (startPosY < p.Y)
+                    return;
+
+                var offset = p.Position + new Vector2(0, Piece.SIZE * count);
+                p.MoveToOffset(new Vector2(0, Piece.SIZE * count));
+                p.Quad = new Quad(offset.X, offset.Y, p.Width - 1, p.Height - 1);
+            });
+
+        }
+
+        private (int clearedLine, int StartLineY) clearLine()
+        {
+            int clearedLine = 0;
+            int startLineY = 0;
+
+            for (int height = 570; height >= 0; height -= Piece.SIZE)
+            {
+                var line = Array.FindAll(Children.ToArray(), p => (int)p.Y == height);
+
+                if (line.Length == 10)
+                {
+                    startLineY = (int)line.FirstOrDefault()?.Y;
+                    line.ForEach(p =>
+                    {
+                        Remove(p);
+                        p.Dispose();
+                    });
+                    clearedLine++;
+                }
+            }
+
+            return (clearedLine, startLineY);
         }
 
         private void addPieceGroup(PieceType pieceType)
