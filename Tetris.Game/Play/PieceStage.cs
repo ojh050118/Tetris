@@ -19,7 +19,7 @@ namespace Tetris.Game.Play
 {
     public class PieceStage : Container<Piece>, IKeyBindingHandler<InputAction>
     {
-        private PieceGroup group;
+        public PieceGroup CurrentPieceGroup;
 
         private readonly RandomPieceGenerator rpg;
 
@@ -45,25 +45,25 @@ namespace Tetris.Game.Play
             switch (e.Action)
             {
                 case InputAction.RotateClockwise:
-                    group.Rotate(direction = RotationDirection.Clockwise);
+                    CurrentPieceGroup.Rotate(direction = RotationDirection.Clockwise);
                     break;
 
                 case InputAction.RotateCounterclockwise:
-                    group.Rotate(direction = RotationDirection.Counterclockwise);
+                    CurrentPieceGroup.Rotate(direction = RotationDirection.Counterclockwise);
                     break;
 
                 case InputAction.Rotate180:
-                    group.Rotate(direction = RotationDirection.Clockwise);
+                    CurrentPieceGroup.Rotate(direction = RotationDirection.Clockwise);
                     checkForCollision(moveOffset, direction);
-                    group.Rotate(direction = RotationDirection.Clockwise);
+                    CurrentPieceGroup.Rotate(direction = RotationDirection.Clockwise);
                     break;
 
                 case InputAction.PieceLeft:
-                    group.MoveToOffset(moveOffset = new Vector2(-Piece.SIZE, 0));
+                    CurrentPieceGroup.MoveToOffset(moveOffset = new Vector2(-Piece.SIZE, 0));
                     break;
 
                 case InputAction.PieceRight:
-                    group.MoveToOffset(moveOffset = new Vector2(Piece.SIZE, 0));
+                    CurrentPieceGroup.MoveToOffset(moveOffset = new Vector2(Piece.SIZE, 0));
                     break;
 
                 case InputAction.SoftDrop:
@@ -93,13 +93,13 @@ namespace Tetris.Game.Play
             if (hardDrop)
             {
                 while (!checkForCollision(new Vector2(0, Piece.SIZE)))
-                    group.MoveToOffset(new Vector2(0, Piece.SIZE));
+                    CurrentPieceGroup.MoveToOffset(new Vector2(0, Piece.SIZE));
 
                 commit();
             }
             else
             {
-                group.MoveToOffset(new Vector2(0, Piece.SIZE));
+                CurrentPieceGroup.MoveToOffset(new Vector2(0, Piece.SIZE));
 
                 if (checkForCollision(new Vector2(0, Piece.SIZE)))
                     commit();
@@ -119,7 +119,6 @@ namespace Tetris.Game.Play
                 p.MoveToOffset(new Vector2(0, Piece.SIZE * count));
                 p.Quad = new Quad(offset.X, offset.Y, p.Width - 1, p.Height - 1);
             });
-
         }
 
         private (int clearedLine, int StartLineY) clearLine()
@@ -133,7 +132,7 @@ namespace Tetris.Game.Play
 
                 if (line.Length == 10)
                 {
-                    startLineY = (int)line.FirstOrDefault()?.Y;
+                    startLineY = (int)line.First().Y;
                     line.ForEach(p =>
                     {
                         Remove(p);
@@ -148,7 +147,7 @@ namespace Tetris.Game.Play
 
         private void addPieceGroup(PieceType pieceType)
         {
-            AddRange((group = createPieceGroup(pieceType)).Pieces);
+            AddRange((CurrentPieceGroup = createPieceGroup(pieceType)).Pieces);
         }
 
         private PieceGroup createPieceGroup(PieceType pieceType) => PieceGroupExtension.CreatePieceGroup(pieceType, new Vector2(Stage.STAGE_WIDTH / 2 - Piece.SIZE * 2, -Piece.SIZE * 2));
@@ -162,25 +161,22 @@ namespace Tetris.Game.Play
                 // 회전 여부는 좌표 값 차이로 확인합니다.
                 if (Precision.AlmostEquals(Vector2.Zero, moveOffset))
                 {
-                    if (direction == RotationDirection.Clockwise)
-                        group.Rotate(RotationDirection.Counterclockwise);
-                    else
-                        group.Rotate(RotationDirection.Clockwise);
+                    CurrentPieceGroup.Rotate(direction == RotationDirection.Clockwise ? RotationDirection.Counterclockwise : RotationDirection.Clockwise);
 
-                    group.Pieces.ForEach(p => p.FlashColour(Color4.Red, 1000, Easing.OutQuint));
+                    CurrentPieceGroup.Pieces.ForEach(p => p.FlashColour(Color4.Red, 1000, Easing.OutQuint));
 
                     return;
                 }
 
-                group.Pieces.ForEach(p => p.FlashColour(Color4.Red, 1000, Easing.OutQuint));
-                group.MoveToOffset(-moveOffset);
+                CurrentPieceGroup.Pieces.ForEach(p => p.FlashColour(Color4.Red, 1000, Easing.OutQuint));
+                CurrentPieceGroup.MoveToOffset(-moveOffset);
             }
 
-            foreach (var piece in group.Pieces)
+            foreach (var piece in CurrentPieceGroup.Pieces)
             {
                 foreach (var spacePiece in Children)
                 {
-                    if (spacePiece.Group.Equals(group))
+                    if (spacePiece.Group.Equals(CurrentPieceGroup))
                         continue;
 
                     if (spacePiece.Quad.Intersects(piece.Quad))

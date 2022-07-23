@@ -57,7 +57,7 @@ namespace Tetris.Game.Pieces
 
         public bool Equals(Piece piece)
         {
-            return PieceColour == piece.PieceColour &&
+            return PieceColour == piece!.PieceColour &&
                    Group.Equals(piece.Group) &&
                    Quad.AlmostEquals(piece.Quad) &&
                    PieceType == piece.PieceType;

@@ -10,7 +10,7 @@ namespace Tetris.Game.Pieces.Group
 {
     public static class PieceGroupExtension
     {
-        private static int groupID = 0;
+        private static int groupID;
 
         public static void MoveToOffset(this PieceGroup group, Vector2 newPosition, double duration = 0, Easing easing = Easing.None)
         {
