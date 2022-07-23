@@ -3,9 +3,9 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Screens;
 using osuTK.Graphics;
-using Tetris.Game.Play;
+using Tetris.Game.Screens.Play;
 
-namespace Tetris.Game
+namespace Tetris.Game.Screens
 {
     public class MainScreen : Screen
     {

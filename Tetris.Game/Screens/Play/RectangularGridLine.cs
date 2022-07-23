@@ -8,7 +8,7 @@ using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
-namespace Tetris.Game.Play
+namespace Tetris.Game.Screens.Play
 {
     public class RectangularGridLine : CompositeDrawable
     {

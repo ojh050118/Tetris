@@ -15,7 +15,7 @@ using Tetris.Game.Input;
 using Tetris.Game.Pieces;
 using Tetris.Game.Pieces.Group;
 
-namespace Tetris.Game.Play
+namespace Tetris.Game.Screens.Play
 {
     public class PieceStage : Container<Piece>, IKeyBindingHandler<InputAction>
     {
