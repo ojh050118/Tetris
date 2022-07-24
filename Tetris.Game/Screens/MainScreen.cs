@@ -120,19 +120,13 @@ namespace Tetris.Game.Screens
                         Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.4f), Color4.Transparent)
                     }
                 };
+                Action += createClickEffect;
             }
 
             protected override bool OnHover(HoverEvent e)
             {
                 hover.FadeIn(100, Easing.OutPow10);
-
-                for (int count = 0; count < wind_effect_amount; count++)
-                {
-                    var wind = createWind(RNG.NextSingle(0.5f));
-
-                    Add(wind);
-                    wind.FadeOut().MoveToY(RNG.NextSingle(-14, 14)).FadeIn().MoveToX(RNG.NextSingle(200, 450), RNG.NextSingle(1000, 1500), Easing.OutPow10).FadeOut(RNG.NextSingle(2000, 3000), Easing.OutPow10).Expire();
-                }
+                createWindEffect();
 
                 return base.OnHover(e);
             }
@@ -145,57 +139,52 @@ namespace Tetris.Game.Screens
                     d.FadeOut(700, Easing.Out);
             }
 
-            protected override bool OnClick(ClickEvent e)
+            private void createWindEffect()
             {
-                Box box;
-
-                Add(box = new Box
+                for (int count = 0; count < wind_effect_amount; count++)
                 {
-                    Anchor = Anchor.TopRight,
-                    Origin = Anchor.TopRight,
-                    RelativeSizeAxes = Axes.Both,
-                    Width = 0.8f,
-                    Colour = ColourInfo.GradientHorizontal(Color4.Transparent, Color4.White.Opacity(0.4f))
-                });
-                box.FadeOut(1000, Easing.OutPow10).Expire();
-                hover.FlashColour(Color4.Transparent, 1000, Easing.OutPow10);
+                    var wind = createWind(RNG.NextSingle(0.5f));
 
-                return base.OnClick(e);
+                    Add(wind);
+                    wind.FadeOut().MoveToY(RNG.NextSingle(-14, 14)).FadeIn().MoveToX(RNG.NextSingle(200, 450), RNG.NextSingle(1000, 1500), Easing.OutPow10).FadeOut(RNG.NextSingle(2000, 3000), Easing.OutPow10).Expire();
+                }
             }
 
-            private Drawable createWind(float width = 0.5f)
+            private void createClickEffect()
+            {
+                Drawable wind;
+
+                createWindEffect();
+                Add(wind = createWind(height: 36));
+                wind.MoveToX(DrawWidth, 1000, Easing.OutPow10).FadeOut(1500, Easing.OutPow10).Expire();
+            }
+
+            private Drawable createWind(float width = 0.5f, float height = 2)
             {
                 return new GridContainer
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreRight,
                     RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
                     Width = width,
+                    Height = height,
                     Depth = 1,
-                    RowDimensions = new[]
-                    {
-                        new Dimension(GridSizeMode.AutoSize)
-                    },
                     Content = new[]
                     {
                         new Drawable[]
                         {
                             new Box
                             {
-                                RelativeSizeAxes = Axes.X,
-                                Height = 2,
+                                RelativeSizeAxes = Axes.Both,
                                 Colour = ColourInfo.GradientHorizontal(Color4.Transparent, Color4.White)
                             },
                             new Box
                             {
-                                RelativeSizeAxes = Axes.X,
-                                Height = 2,
+                                RelativeSizeAxes = Axes.Both,
                             },
                             new Box
                             {
-                                RelativeSizeAxes = Axes.X,
-                                Height = 2,
+                                RelativeSizeAxes = Axes.Both,
                                 Colour = ColourInfo.GradientHorizontal(Color4.White, Color4.Transparent)
                             }
                         }
