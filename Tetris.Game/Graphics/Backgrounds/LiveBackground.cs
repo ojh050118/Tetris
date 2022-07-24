@@ -17,10 +17,11 @@ namespace Tetris.Game.Graphics.Backgrounds
 
         private Color4 currentColor;
 
+        private Box backgroundBox;
         private Container background;
         private Container movingBackground;
 
-        public bool CreateNewBox = true;
+        public bool CreateNewBox { get; private set; } = false;
 
         public const int MAX_BOXES = 12;
 
@@ -29,7 +30,7 @@ namespace Tetris.Game.Graphics.Backgrounds
         {
             Children = new Drawable[]
             {
-                new Box
+                backgroundBox = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
                     Colour = currentColor = createRandomColor().Darken(6)
@@ -54,13 +55,7 @@ namespace Tetris.Game.Graphics.Backgrounds
         {
             base.LoadComplete();
 
-            for (int count = 0; count < 4; count++)
-            {
-                var newColor = currentColor.Multiply(RNG.NextSingle(3)).Lighten(0.3f);
-                var box = createBigBox(newColor);
-                box.X = RNG.NextSingle(-DrawWidth + DrawHeight, DrawWidth) / 2;
-                background.Add(box);
-            }
+            start();
         }
 
         protected override void Update()
@@ -88,6 +83,44 @@ namespace Tetris.Game.Graphics.Backgrounds
                 movingBackground.Add(box);
                 box.MoveToOffset(new Vector2(DrawWidth, -DrawWidth), box.Width * 0.01f * 10000).Expire();
             }
+        }
+
+        private void start()
+        {
+            if (background.Count != 0 && CreateNewBox)
+                return;
+
+            background.AddRange(createBackground(4));
+            CreateNewBox = true;
+        }
+
+        public void Reset()
+        {
+            CreateNewBox = false;
+
+            background.Clear();
+            movingBackground.Clear();
+
+            currentColor = createRandomColor().Darken(6);
+            backgroundBox.Colour = currentColor;
+
+            background.AddRange(createBackground(4));
+            CreateNewBox = true;
+        }
+
+        private Container[] createBackground(int boxAmount)
+        {
+            Container[] bg = new Container[boxAmount];
+
+            for (int i = 0; i < boxAmount; i++)
+            {
+                var newColor = currentColor.Multiply(RNG.NextSingle(3)).Lighten(0.3f);
+                var box = createBigBox(newColor);
+                box.X = RNG.NextSingle(-DrawWidth + DrawHeight, DrawWidth) / 2;
+                bg[i] = box;
+            }
+
+            return bg;
         }
 
         private Container createSmallBox(Vector2 size, Color4 color)
