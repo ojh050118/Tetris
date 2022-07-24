@@ -7,13 +7,14 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.Screens;
 using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
+using Tetris.Game.Graphics;
 using Tetris.Game.Graphics.Backgrounds;
+using Tetris.Game.Graphics.Sprites;
 
 namespace Tetris.Game.Screens
 {
@@ -22,7 +23,7 @@ namespace Tetris.Game.Screens
         private BufferedContainer background;
 
         [BackgroundDependencyLoader]
-        private void load(LargeTextureStore textures, TetrisGameBase game)
+        private void load(TetrisGameBase game)
         {
             InternalChildren = new Drawable[]
             {
@@ -32,12 +33,6 @@ namespace Tetris.Game.Screens
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
-                        new Sprite
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Texture = textures.Get("bg1.jfif"),
-                            FillMode = FillMode.Fill
-                        },
                         new LiveBackground
                         {
                             RelativeSizeAxes = Axes.Both
@@ -67,6 +62,12 @@ namespace Tetris.Game.Screens
                                 })
                             }
                         },
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.Black,
+                            Alpha = 0.2f
+                        },
                         new FillFlowContainer
                         {
                             RelativeSizeAxes = Axes.Both,
@@ -74,6 +75,14 @@ namespace Tetris.Game.Screens
                             Spacing = new Vector2(0, 10),
                             Children = new Drawable[]
                             {
+                                new GlowingSpriteText
+                                {
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Text = "Tetris",
+                                    GlowColour = Color4.DeepSkyBlue,
+                                    Font = TetrisFont.Default.With(size: 36, weight: FontWeight.Bold),
+                                },
                                 new TextButton("Play"),
                                 new TextButton("Settings"),
                                 new TextButton("Exit")
@@ -91,8 +100,17 @@ namespace Tetris.Game.Screens
         {
             private readonly string text;
             private Box hover;
+            private SpriteText spriteText;
 
             private const int wind_effect_amount = 5;
+
+            private const float font_size = 32;
+
+            private float textSize
+            {
+                get => spriteText.Font.Size;
+                set => spriteText.Font = TetrisFont.Default.With(size: value);
+            }
 
             public TextButton(string text)
             {
@@ -101,6 +119,8 @@ namespace Tetris.Game.Screens
                 Origin = Anchor.Centre;
                 RelativeSizeAxes = Axes.X;
                 AutoSizeAxes = Axes.Y;
+                AutoSizeDuration = 1000;
+                AutoSizeEasing = Easing.OutPow10;
             }
 
             [BackgroundDependencyLoader]
@@ -108,12 +128,12 @@ namespace Tetris.Game.Screens
             {
                 Children = new Drawable[]
                 {
-                    new SpriteText
+                    spriteText = new SpriteText
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Text = text,
-                        Font = FontUsage.Default.With(size: 28),
+                        Font = TetrisFont.Default.With(size: font_size),
                         Margin = new MarginPadding(4),
                         Shadow = true,
                         ShadowColour = Color4.Black.Opacity(0.5f)
@@ -122,7 +142,8 @@ namespace Tetris.Game.Screens
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.8f,
-                        Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.4f), Color4.Transparent)
+                        Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.4f), Color4.Transparent),
+                        Alpha = 0
                     }
                 };
                 Action += createClickEffect;
@@ -132,6 +153,7 @@ namespace Tetris.Game.Screens
             {
                 hover.FadeIn(100, Easing.OutPow10);
                 createWindEffect();
+                this.TransformTo("textSize", 40f, 1000, Easing.OutPow10);
 
                 return base.OnHover(e);
             }
@@ -139,6 +161,8 @@ namespace Tetris.Game.Screens
             protected override void OnHoverLost(HoverLostEvent e)
             {
                 base.OnHoverLost(e);
+
+                this.TransformTo("textSize", 32f, 1000, Easing.OutPow10);
 
                 foreach (var d in Array.FindAll(Children.ToArray(), h => h.GetType() != typeof(SpriteText)))
                     d.FadeOut(700, Easing.Out);
@@ -151,16 +175,16 @@ namespace Tetris.Game.Screens
                     var wind = createWind(RNG.NextSingle(0.5f));
 
                     Add(wind);
-                    wind.FadeOut().MoveToY(RNG.NextSingle(-14, 14)).FadeIn().MoveToX(RNG.NextSingle(200, 450), RNG.NextSingle(1000, 1500), Easing.OutPow10).FadeOut(RNG.NextSingle(2000, 3000), Easing.OutPow10).Expire();
+                    wind.FadeOut().MoveToY(RNG.NextSingle(-font_size / 2, font_size / 2)).FadeIn().MoveToX(RNG.NextSingle(200, 450), RNG.NextSingle(1000, 1500), Easing.OutPow10).FadeOut(RNG.NextSingle(2000, 3000), Easing.OutPow10).Expire();
                 }
             }
 
             private void createClickEffect()
             {
-                Drawable wind;
-
                 createWindEffect();
-                Add(wind = createWind(height: 36));
+                var wind = createWind(height: 1);
+                wind.RelativeSizeAxes = Axes.Both;
+                Add(wind);
                 wind.MoveToX(DrawWidth, 1000, Easing.OutPow10).FadeOut(1500, Easing.OutPow10).Expire();
             }
 
