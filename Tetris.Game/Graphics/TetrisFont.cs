@@ -4,7 +4,7 @@ namespace Tetris.Game.Graphics
 {
     public static class TetrisFont
     {
-        public const float DEFAULT_FONT_SIZE = 16;
+        public const float DEFAULT_FONT_SIZE = 24;
 
         public static FontUsage Default => GetFont();
 
