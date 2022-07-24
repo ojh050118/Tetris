@@ -91,7 +91,7 @@ namespace Tetris.Game.Graphics.Backgrounds
 
             if (movingBackground.Count < 12)
             {
-                var size = new Vector2(RNG.NextSingle(100, 400), RNG.Next(4, 6));
+                var size = new Vector2(RNG.NextSingle(100, 400), RNG.Next(4, 7));
                 var box = createSmallBox(size, currentColor.Multiply(RNG.Next(1, 10)).Lighten(0.5f));
                 box.X = RNG.NextSingle(-DrawWidth, DrawWidth);
 
