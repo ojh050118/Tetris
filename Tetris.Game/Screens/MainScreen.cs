@@ -39,56 +39,33 @@ namespace Tetris.Game.Screens
                         }
                     }
                 },
-                new Container
+                new AcrylPanel(background.CreateView().With(d =>
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Width = 0.5f,
-                    Masking = true,
-                    Shear = new Vector2(0.2f, 0),
-                    Children = new Drawable[]
+                    d.RelativeSizeAxes = Axes.Both;
+                    d.SynchronisedDrawQuad = true;
+                    d.DisplayOriginalEffects = true;
+                }))
+                {
+                    Content = new FillFlowContainer
                     {
-                        new BufferedContainer
+                        RelativeSizeAxes = Axes.Both,
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 10),
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.Both,
-                            Masking = true,
-                            BlurSigma = new Vector2(7),
-                            Children = new Drawable[]
+                            new GlowingSpriteText
                             {
-                                background.CreateView().With(d =>
-                                {
-                                    d.RelativeSizeAxes = Axes.Both;
-                                    d.SynchronisedDrawQuad = true;
-                                    d.DisplayOriginalEffects = true;
-                                })
-                            }
-                        },
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Black,
-                            Alpha = 0.2f
-                        },
-                        new FillFlowContainer
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Direction = FillDirection.Vertical,
-                            Spacing = new Vector2(0, 10),
-                            Children = new Drawable[]
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
+                                Text = "Tetris",
+                                GlowColour = Color4.DeepSkyBlue,
+                                Font = TetrisFont.Default.With(size: 36, weight: FontWeight.Bold),
+                            },
+                            new TextButton("Play"),
+                            new TextButton("Settings"),
+                            new TextButton("Exit")
                             {
-                                new GlowingSpriteText
-                                {
-                                    Anchor = Anchor.Centre,
-                                    Origin = Anchor.Centre,
-                                    Text = "Tetris",
-                                    GlowColour = Color4.DeepSkyBlue,
-                                    Font = TetrisFont.Default.With(size: 36, weight: FontWeight.Bold),
-                                },
-                                new TextButton("Play"),
-                                new TextButton("Settings"),
-                                new TextButton("Exit")
-                                {
-                                    Action = game.RequestExit
-                                }
+                                Action = game.RequestExit
                             }
                         }
                     }
