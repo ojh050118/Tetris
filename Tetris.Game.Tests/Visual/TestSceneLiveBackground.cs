@@ -7,7 +7,10 @@ namespace Tetris.Game.Tests.Visual
     {
         public TestSceneLiveBackground()
         {
-            Add(new LiveBackground { RelativeSizeAxes = Axes.Both });
+            LiveBackground bg;
+
+            Add(bg = new LiveBackground { RelativeSizeAxes = Axes.Both });
+            AddStep("Reset", bg.Reset);
         }
     }
 }
