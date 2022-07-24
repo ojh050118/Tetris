@@ -21,6 +21,20 @@ namespace Tetris.Game.Graphics.Backgrounds
         private Container background;
         private Container movingBackground;
 
+        private float speedRate = 1;
+
+        public float SpeedRate
+        {
+            get => speedRate;
+            set
+            {
+                if (value <= 0 || float.IsInfinity(value))
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                speedRate = value;
+            }
+        }
+
         public bool CreateNewBox { get; private set; } = false;
 
         public const int MAX_BOXES = 12;
@@ -62,6 +76,7 @@ namespace Tetris.Game.Graphics.Backgrounds
         {
             base.Update();
 
+            // 우측 상단을 넘어 화면에 보이지 않을때 삭제합니다.
             foreach (var d in movingBackground.Children)
             {
                 if (-d.Y - d.Width * Math.Sin(Math.PI / 4) > DrawHeight || d.X - d.Width * Math.Cos(Math.PI / 4) > DrawWidth)
@@ -81,7 +96,7 @@ namespace Tetris.Game.Graphics.Backgrounds
                 box.X = RNG.NextSingle(-DrawWidth, DrawWidth);
 
                 movingBackground.Add(box);
-                box.MoveToOffset(new Vector2(DrawWidth, -DrawWidth), box.Width * 0.01f * 10000).Expire();
+                box.MoveToOffset(new Vector2(DrawWidth, -DrawWidth) * 2, 1 / speedRate * box.Width * 0.01f * 20000).Expire();
             }
         }
 

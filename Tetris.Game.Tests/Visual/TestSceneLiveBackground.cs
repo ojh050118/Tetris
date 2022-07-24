@@ -10,6 +10,7 @@ namespace Tetris.Game.Tests.Visual
             LiveBackground bg;
 
             Add(bg = new LiveBackground { RelativeSizeAxes = Axes.Both });
+            AddSliderStep("Speed rate", 0.1f, 5f, 1f, r => bg.SpeedRate = r);
             AddStep("Reset", bg.Reset);
         }
     }
