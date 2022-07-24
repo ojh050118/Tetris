@@ -13,6 +13,7 @@ using osu.Framework.Screens;
 using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
+using Tetris.Game.Graphics.Backgrounds;
 
 namespace Tetris.Game.Screens
 {
@@ -36,6 +37,10 @@ namespace Tetris.Game.Screens
                             RelativeSizeAxes = Axes.Both,
                             Texture = textures.Get("bg1.jfif"),
                             FillMode = FillMode.Fill
+                        },
+                        new LiveBackground
+                        {
+                            RelativeSizeAxes = Axes.Both
                         }
                     }
                 },
