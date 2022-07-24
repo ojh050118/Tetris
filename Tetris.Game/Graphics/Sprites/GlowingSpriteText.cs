@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using osu.Framework.Bindables;
+﻿using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
@@ -92,7 +89,7 @@ namespace Tetris.Game.Graphics.Sprites
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Font= TetrisFont.Default
+                    Font = TetrisFont.Default
                 },
             };
         }
