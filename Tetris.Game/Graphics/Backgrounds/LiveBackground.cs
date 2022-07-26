@@ -20,6 +20,7 @@ namespace Tetris.Game.Graphics.Backgrounds
         private Box backgroundBox;
         private Container background;
         private Container movingBackground;
+        private Box dim;
 
         private float speedRate = 1;
 
@@ -35,9 +36,26 @@ namespace Tetris.Game.Graphics.Backgrounds
             }
         }
 
+        public float Dim
+        {
+            get => dim.Alpha;
+            set => dim.Alpha = value;
+        }
+
         public bool CreateNewBox { get; private set; } = false;
 
         public const int MAX_BOXES = 12;
+
+        public LiveBackground()
+        {
+            RelativeSizeAxes = Axes.Both;
+            dim = new Box
+            {
+                RelativeSizeAxes = Axes.Both,
+                Colour = Color4.Black,
+                Alpha = 0
+            };
+        }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -61,7 +79,8 @@ namespace Tetris.Game.Graphics.Backgrounds
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     RelativeSizeAxes = Axes.Both,
-                }
+                },
+                dim
             };
         }
 
