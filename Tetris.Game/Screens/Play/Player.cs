@@ -17,7 +17,8 @@ namespace Tetris.Game.Screens.Play
                 },
                 new Stage
                 {
-                    RelativeSizeAxes = Axes.Both
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
                 }
             };
         }
