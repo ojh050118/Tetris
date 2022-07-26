@@ -19,15 +19,18 @@ namespace Tetris.Game.Screens
             RelativeSizeAxes = Axes.Both;
             Width = 0.5f;
             Masking = true;
-            Shear = new Vector2(0.2f, 0);
-
             Content = new Container { RelativeSizeAxes = Axes.Both };
             this.view = new BufferedContainer
             {
                 RelativeSizeAxes = Axes.Both,
                 Masking = true,
                 BlurSigma = new Vector2(7),
-                Child = view
+                Child = view.With(d =>
+                {
+                    d.RelativeSizeAxes = Axes.Both;
+                    d.SynchronisedDrawQuad = true;
+                    d.DisplayOriginalEffects = true;
+                })
             };
         }
 
@@ -36,14 +39,23 @@ namespace Tetris.Game.Screens
         {
             Children = new Drawable[]
             {
-                view,
-                new Box
+                new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Black,
-                    Alpha = 0.2f
-                },
-                Content
+                    Shear = new Vector2(0.2f, 0),
+                    Masking = true,
+                    Children = new Drawable[]
+                    {
+                        view,
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.Black,
+                            Alpha = 0.2f
+                        },
+                        Content
+                    }
+                }
             };
         }
     }
