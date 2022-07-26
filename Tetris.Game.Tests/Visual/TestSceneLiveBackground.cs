@@ -11,6 +11,7 @@ namespace Tetris.Game.Tests.Visual
 
             Add(bg = new LiveBackground { RelativeSizeAxes = Axes.Both });
             AddSliderStep("Speed rate", 0.1f, 5f, 1f, r => bg.SpeedRate = r);
+            AddSliderStep("Dim", 0f, 1f, 0f, a => bg.Dim = a);
             AddStep("Reset", bg.Reset);
         }
     }
