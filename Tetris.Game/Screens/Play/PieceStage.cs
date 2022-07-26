@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Framework.Timing;
 using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
@@ -23,9 +24,13 @@ namespace Tetris.Game.Screens.Play
 
         private readonly RandomPieceGenerator rpg;
 
+        private StopwatchClock dropClock;
+        private int elapsedSecond;
+
         public PieceStage()
         {
             rpg = new RandomPieceGenerator();
+            dropClock = new StopwatchClock();
         }
 
         [BackgroundDependencyLoader]
@@ -34,7 +39,24 @@ namespace Tetris.Game.Screens.Play
             Anchor = Anchor.BottomLeft;
             Origin = Anchor.BottomLeft;
             Size = new Vector2(Stage.STAGE_WIDTH, Stage.STAGE_HEIGHT);
+        }
+
+        public void Start()
+        {
             addPieceGroup(rpg.NextPiece());
+            dropClock.Start();
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            if (dropClock.ElapsedMilliseconds / 1000 != elapsedSecond)
+            {
+                elapsedSecond++;
+                drop(false);
+            }
+
         }
 
         public virtual bool OnPressed(KeyBindingPressEvent<InputAction> e)
@@ -45,25 +67,25 @@ namespace Tetris.Game.Screens.Play
             switch (e.Action)
             {
                 case InputAction.RotateClockwise:
-                    CurrentPieceGroup.Rotate(direction = RotationDirection.Clockwise);
+                    CurrentPieceGroup?.Rotate(direction = RotationDirection.Clockwise);
                     break;
 
                 case InputAction.RotateCounterclockwise:
-                    CurrentPieceGroup.Rotate(direction = RotationDirection.Counterclockwise);
+                    CurrentPieceGroup?.Rotate(direction = RotationDirection.Counterclockwise);
                     break;
 
                 case InputAction.Rotate180:
-                    CurrentPieceGroup.Rotate(direction = RotationDirection.Clockwise);
+                    CurrentPieceGroup?.Rotate(direction = RotationDirection.Clockwise);
                     checkForCollision(moveOffset, direction);
-                    CurrentPieceGroup.Rotate(direction = RotationDirection.Clockwise);
+                    CurrentPieceGroup?.Rotate(direction = RotationDirection.Clockwise);
                     break;
 
                 case InputAction.PieceLeft:
-                    CurrentPieceGroup.MoveToOffset(moveOffset = new Vector2(-Piece.SIZE, 0));
+                    CurrentPieceGroup?.MoveToOffset(moveOffset = new Vector2(-Piece.SIZE, 0));
                     break;
 
                 case InputAction.PieceRight:
-                    CurrentPieceGroup.MoveToOffset(moveOffset = new Vector2(Piece.SIZE, 0));
+                    CurrentPieceGroup?.MoveToOffset(moveOffset = new Vector2(Piece.SIZE, 0));
                     break;
 
                 case InputAction.SoftDrop:
@@ -90,20 +112,23 @@ namespace Tetris.Game.Screens.Play
 
         private void drop(bool hardDrop)
         {
+            if (CurrentPieceGroup == null)
+                return;
+
             if (hardDrop)
             {
                 while (!checkForCollision(new Vector2(0, Piece.SIZE)))
-                    CurrentPieceGroup.MoveToOffset(new Vector2(0, Piece.SIZE));
-
-                commit();
+                    CurrentPieceGroup?.MoveToOffset(new Vector2(0, Piece.SIZE));
             }
             else
             {
-                CurrentPieceGroup.MoveToOffset(new Vector2(0, Piece.SIZE));
+                CurrentPieceGroup?.MoveToOffset(new Vector2(0, Piece.SIZE));
 
-                if (checkForCollision(new Vector2(0, Piece.SIZE)))
-                    commit();
+                if (!checkForCollision(new Vector2(0, Piece.SIZE)))
+                    return;
             }
+
+            commit();
         }
 
         private void commit()
@@ -119,6 +144,9 @@ namespace Tetris.Game.Screens.Play
                 p.MoveToOffset(new Vector2(0, Piece.SIZE * count));
                 p.Quad = new Quad(offset.X, offset.Y, p.Width - 1, p.Height - 1);
             });
+
+            dropClock.Restart();
+            elapsedSecond = 0;
         }
 
         private (int clearedLine, int StartLineY) clearLine()
@@ -154,6 +182,9 @@ namespace Tetris.Game.Screens.Play
 
         private bool checkForCollision(Vector2 moveOffset = default, RotationDirection direction = RotationDirection.Clockwise)
         {
+            if (CurrentPieceGroup == null)
+                return false;
+
             bool collied = false;
 
             void revert()

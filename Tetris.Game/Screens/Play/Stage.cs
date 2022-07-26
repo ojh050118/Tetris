@@ -13,15 +13,18 @@ namespace Tetris.Game.Screens.Play
         public const int STAGE_WIDTH = 300;
         public const int STAGE_HEIGHT = 600;
 
+        private PieceStage stage;
+
         [BackgroundDependencyLoader]
         private void load()
         {
+            AutoSizeAxes = Axes.Both;
             Children = new Drawable[]
             {
                 new Container
                 {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
                     Size = new Vector2(STAGE_WIDTH, STAGE_HEIGHT),
                     Children = new Drawable[]
                     {
@@ -36,10 +39,17 @@ namespace Tetris.Game.Screens.Play
                             RelativeSizeAxes = Axes.Both,
                             Spacing = new Vector2(Piece.SIZE)
                         },
-                        new PieceStage()
+                        stage = new PieceStage()
                     }
                 },
             };
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            stage.Start();
         }
     }
 }
