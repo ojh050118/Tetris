@@ -15,12 +15,15 @@ using osuTK.Graphics;
 using Tetris.Game.Graphics;
 using Tetris.Game.Graphics.Backgrounds;
 using Tetris.Game.Graphics.Sprites;
+using Tetris.Game.Screens.Play;
 
 namespace Tetris.Game.Screens
 {
-    public class MainScreen : Screen
+    public class MainScreen : TetrisScreen
     {
         private BufferedContainer background;
+
+        public override bool BlockExit => true;
 
         [BackgroundDependencyLoader]
         private void load(TetrisGameBase game)
@@ -39,12 +42,7 @@ namespace Tetris.Game.Screens
                         }
                     }
                 },
-                new AcrylPanel(background.CreateView().With(d =>
-                {
-                    d.RelativeSizeAxes = Axes.Both;
-                    d.SynchronisedDrawQuad = true;
-                    d.DisplayOriginalEffects = true;
-                }))
+                new AcrylPanel(background.CreateView())
                 {
                     Content = new FillFlowContainer
                     {
@@ -61,7 +59,10 @@ namespace Tetris.Game.Screens
                                 GlowColour = Color4.DeepSkyBlue,
                                 Font = TetrisFont.Default.With(size: 36, weight: FontWeight.Bold),
                             },
-                            new TextButton("Play"),
+                            new TextButton("Play")
+                            {
+                                Action = () => this.Push(new Player())
+                            },
                             new TextButton("Settings"),
                             new TextButton("Exit")
                             {
