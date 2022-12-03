@@ -37,19 +37,12 @@ namespace Tetris.Game.Screens.Play
                         new RectangularGridLine(new Vector2(STAGE_WIDTH, STAGE_HEIGHT))
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Spacing = new Vector2(Piece.SIZE)
+                            Spacing = new Vector2(Block.SIZE)
                         },
                         stage = new PieceStage()
                     }
                 },
             };
-        }
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            stage.Start();
         }
     }
 }

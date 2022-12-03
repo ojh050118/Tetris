@@ -8,7 +8,6 @@
         Z,
         L,
         J,
-        T,
-        Other
+        T
     }
 }

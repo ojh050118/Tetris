@@ -4,14 +4,21 @@ namespace Tetris.Game.Pieces.Shapes
 {
     public class PieceI : Piece
     {
-        public override bool[][] Shape => new[]
+        public override Block[,] Shape { get; } =
         {
-            new[] { false, false, false, false },
-            new[] { true, true, true, true }
+            {
+                null, null, null, null
+            },
+            {
+                new Block(), new Block(), new Block(), new Block()
+            }
         };
 
         public override PieceType PieceType => PieceType.I;
 
-        public override Color4 PieceColour => new Color4(52, 179, 132, 255);
+        public PieceI()
+        {
+            PieceColour = new Color4(52, 179, 132, 255);
+        }
     }
 }

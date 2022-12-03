@@ -1,73 +1,66 @@
-﻿using System;
+using System;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.Shapes;
 using osuTK;
 using osuTK.Graphics;
-using Tetris.Game.Pieces.Group;
 
 namespace Tetris.Game.Pieces
 {
-    public abstract class Piece : Container, IHasPieceProperty, IEquatable<Piece>
+    public abstract class Piece : Container<Block>
     {
-        public const int SIZE = 30;
+        public abstract Block[,] Shape { get; }
+        public abstract PieceType PieceType { get; }
+        public Block[] Blocks => Array.FindAll(Shape.ToLinear(), b => b != null);
 
-        public abstract Color4 PieceColour { get; }
-
-        private bool[][] shape;
-
-        public virtual bool[][] Shape
+        public Color4 PieceColour
         {
-            get => shape;
+            get => pieceColour;
             set
             {
-                if (value.Length != 2)
-                    throw new ArgumentException("행의 길이는 2여야합니다.");
+                if (pieceColour.Equals(value))
+                    return;
 
-                for (int index = 0; index < value.Length; index++)
-                {
-                    if (value[index].Length != 4)
-                        throw new ArgumentException($"[{index}]의 길이는 4이여야 합니다.");
-                }
-
-                shape = value;
+                pieceColour = value;
+                Blocks.ForEach(b => b.BlockColour = value);
             }
         }
 
-        public Vector2 InitialPosition { get; set; }
-
-        public abstract PieceType PieceType { get; }
-
-        public virtual PieceGroup Group { get; set; }
-
-        public Quad Quad { get; set; }
+        private Color4 pieceColour;
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            Size = new Vector2(SIZE);
-            Child = new Box
+            ArrangeBlockPosition();
+            Size = ComputePieceAreaSize();
+            Children = Array.FindAll(Shape.ToLinear(), b => b != null);
+        }
+
+        protected void ArrangeBlockPosition()
+        {
+            Vector2 offset = Vector2.Zero;
+
+            for (int i = 0; i < Shape.Rank; i++)
             {
-                RelativeSizeAxes = Axes.Both,
-                Colour = PieceColour
-            };
+                for (int j = 0; j < Shape.GetLength(i); j++)
+                {
+                    if (Shape[i, j] != null)
+                        Shape[i, j].Position = offset;
+
+                    offset.X += Block.SIZE;
+                }
+
+                offset.X = 0;
+                offset.Y += Block.SIZE;
+            }
         }
 
-        public bool Equals(Piece piece)
+        protected Vector2 ComputePieceAreaSize()
         {
-            return PieceColour == piece!.PieceColour &&
-                   Group.Equals(piece.Group) &&
-                   Quad.AlmostEquals(piece.Quad) &&
-                   PieceType == piece.PieceType;
-        }
+            var rowLength = Shape.Rank;
+            var columnLength = Shape.GetLength(1);
 
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-
-            Group.Pieces.Remove(this);
+            return new Vector2(Math.Max(rowLength, columnLength) * Block.SIZE);
         }
     }
 }

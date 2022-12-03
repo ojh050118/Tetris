@@ -24,6 +24,7 @@ namespace Tetris.Game.Input
             new KeyBinding(InputKey.Right, InputAction.PieceRight),
             new KeyBinding(InputKey.Up, InputAction.RotateClockwise),
             new KeyBinding(InputKey.Z, InputAction.RotateCounterclockwise),
+            new KeyBinding(InputKey.X, InputAction.RotateClockwise),
             new KeyBinding(InputKey.A, InputAction.Rotate180),
             new KeyBinding(InputKey.Shift, InputAction.SwapHoldPiece),
             new KeyBinding(InputKey.C, InputAction.SwapHoldPiece),

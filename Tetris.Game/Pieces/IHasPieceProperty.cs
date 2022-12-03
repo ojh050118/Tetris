@@ -4,7 +4,7 @@ namespace Tetris.Game.Pieces
 {
     public interface IHasPieceProperty
     {
-        bool[][] Shape { get; }
+        bool[,] Shape { get; }
 
         PieceType PieceType { get; }
 
