@@ -42,7 +42,7 @@ namespace Tetris.Game.Pieces
 
             for (int i = 0; i < Shape.Rank; i++)
             {
-                for (int j = 0; j < Shape.GetLength(i); j++)
+                for (int j = 0; j < Shape.GetLength(1); j++)
                 {
                     if (Shape[i, j] != null)
                         Shape[i, j].Position = offset;

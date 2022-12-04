@@ -7,10 +7,10 @@ namespace Tetris.Game.Pieces.Shapes
         public override Block[,] Shape { get; } =
         {
             {
-                null, null, null, new Block()
+                null, null, new Block()
             },
             {
-                null, new Block(), new Block(), new Block()
+                new Block(), new Block(), new Block()
             }
         };
 
