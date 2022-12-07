@@ -1,4 +1,5 @@
-﻿using osuTK.Graphics;
+﻿using osuTK;
+using osuTK.Graphics;
 
 namespace Tetris.Game.Pieces.Shapes
 {
@@ -15,6 +16,8 @@ namespace Tetris.Game.Pieces.Shapes
         };
 
         public override PieceType PieceType => PieceType.O;
+
+        public override Vector2 RotateOriginPosition => new Vector2(15, 15);
 
         public PieceO()
         {
