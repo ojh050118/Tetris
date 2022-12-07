@@ -16,7 +16,7 @@ namespace Tetris.Game.Screens.Play
         public PieceStage()
         {
             Size = new Vector2(Block.SIZE * 10, Block.SIZE * 20);
-            Add(piece = new PieceI() { Anchor = Anchor.TopCentre, Origin = Anchor.BottomCentre });
+            Add(piece = new PieceI { Anchor = Anchor.TopCentre, Origin = Anchor.Centre });
 
             if (typeof(PieceI) == piece.GetType())
                 piece.Y += Block.SIZE;
