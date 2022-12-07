@@ -29,8 +29,8 @@ namespace Tetris.Game.Pieces
 
             for (int i = 0; i < depth; i++)
             {
-                pos.X = drawable.AnchorPosition.X - drawable.OriginPosition.X + drawable.X + childDrawable.X;
-                pos.Y = drawable.AnchorPosition.Y - drawable.OriginPosition.Y + drawable.Y + childDrawable.Y;
+                pos.X += drawable.AnchorPosition.X - drawable.OriginPosition.X + drawable.X + childDrawable.X;
+                pos.Y += drawable.AnchorPosition.Y - drawable.OriginPosition.Y + drawable.Y + childDrawable.Y;
 
                 childDrawable = drawable;
                 drawable = drawable.Parent;

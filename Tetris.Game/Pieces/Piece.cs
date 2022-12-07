@@ -3,6 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
@@ -56,11 +57,23 @@ namespace Tetris.Game.Pieces
                 block.FinishTransforms();
                 block.MoveTo(new Vector2(destX, destY) + RotateOriginPosition, duration, easing);
             }
+
+            updateBlockQuad();
         }
 
         public void Move(PieceMoveDirection direction, double duration = 0, Easing easing = Easing.None)
         {
             this.MoveToOffset(new Vector2((direction == PieceMoveDirection.Left ? -1 : 1) * Block.SIZE, 0), duration, easing);
+            updateBlockQuad();
+        }
+
+        private void updateBlockQuad()
+        {
+            foreach (var block in Blocks)
+            {
+                var pos = block.ToParentPosition(1);
+                block.Quad = new Quad(pos.X, pos.Y, Block.SIZE, Block.SIZE);
+            }
         }
 
         private float getSafeRotation(float rotation)
