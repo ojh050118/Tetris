@@ -27,6 +27,8 @@ namespace Tetris.Game.Pieces
             }
         }
 
+        private Color4 blockColour;
+
         public Block()
         {
             Size = new Vector2(SIZE);
@@ -37,11 +39,17 @@ namespace Tetris.Game.Pieces
             };
         }
 
-        private Color4 blockColour;
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            Quad = new Quad(X, Y, Width, Height);
+        }
 
         public bool Equals(Block block)
         {
-            return Position.Equals(block.Position) &&
+            return block != null &&
+                   Position.Equals(block.Position) &&
                    BlockColour.Equals(block.BlockColour);
         }
     }
